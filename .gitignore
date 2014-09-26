@@ -186,3 +186,4 @@ Web.Release.config
 Web.Debug.config
 packages/
 _NCrunch_Passeimal.Backend/
+PublishProfiles/

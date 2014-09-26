@@ -1,8 +1,12 @@
-﻿using Passeimal.Backend.Siren.Formatting;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Passeimal.Backend.Siren.Formatting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Passeimal.Backend.API2 {
     public static class WebApiConfig {
@@ -21,8 +25,15 @@ namespace Passeimal.Backend.API2 {
             // To disable tracing in your application, please comment out or remove the following line of code
             // For more information, refer to: http://www.asp.net/web-api
             config.EnableSystemDiagnosticsTracing();
+            //config.Formatters.Add(new SirenMediaTypeFormatter());
 
-            config.Formatters.Add(new SirenMediaTypeFormatter());
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+
+            var settings = config.Formatters.JsonFormatter.SerializerSettings;
+            settings.Formatting = Formatting.Indented;
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
         }
     }
 }
