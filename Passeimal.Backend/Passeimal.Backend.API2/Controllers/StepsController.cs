@@ -1,4 +1,5 @@
-﻿using Passeimal.Backend.Dal;
+﻿using Passeimal.Backend.API2.Filters;
+using Passeimal.Backend.Dal;
 using Passeimal.Backend.Dal.Repositories;
 using Passeimal.Backend.Domain;
 using System;
@@ -14,7 +15,7 @@ using System.Web.Http.Description;
 using System.Web.Mvc;
 
 namespace Passeimal.Backend.API2.Controllers{
-    [EnableCors("*","*","*")]
+    [AllowCrossSiteJson]    
     public class StepsController : ApiController {
 
         private IDataContext _dataContext;
@@ -26,7 +27,17 @@ namespace Passeimal.Backend.API2.Controllers{
         }
 
         // GET api/Step/5
-        public HttpResponseMessage GetStep(Guid id) {
+        public HttpResponseMessage Get() {
+            var stepsBatch = _dataContext.Set<Step>()
+                .OrderByDescending(x => x.HappenedAt)
+                .Skip(0)
+                .Take(20)
+                .ToList();
+            return Request.CreateResponse(HttpStatusCode.OK, stepsBatch);
+        }
+
+        // GET api/Step/5
+        public HttpResponseMessage Get(Guid id) {
             Step step = _repository.Get(id);
             if (step == null) {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
@@ -36,17 +47,17 @@ namespace Passeimal.Backend.API2.Controllers{
 
         // POST api/Step
         [ResponseType(typeof(Step))]
-        public HttpResponseMessage PostStep(Step step) {
+        public HttpResponseMessage Post(Step step) {
             step.Id = Guid.NewGuid();
             step.HappenedAt = DateTime.Now;
             if (!ModelState.IsValid) {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
-            _repository.Add(step);
+            _dataContext.Set<Step>().Add(step);
 
             try {
-                _repository.SaveChanges();
+                _dataContext.SaveChanges();
             } catch (DbUpdateException) {
                 if (StepExists(step.Id)) {
                     return Request.CreateResponse(HttpStatusCode.Conflict);
@@ -58,14 +69,14 @@ namespace Passeimal.Backend.API2.Controllers{
         }
 
         // DELETE api/Step/5
-        public HttpResponseMessage DeleteStep(Guid id) {
+        public HttpResponseMessage Delete(Guid id) {
             Step step = _repository.Get(id);
             if (step == null) {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            _repository.Remove(step);
-            _repository.SaveChanges();
+            _dataContext.Set<Step>().Remove(step);
+            _dataContext.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, step);
         }
 

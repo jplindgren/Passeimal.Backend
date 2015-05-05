@@ -1,4 +1,5 @@
-﻿using Passeimal.Backend.Domain;
+﻿
+using Passeimal.Backend.Domain;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
