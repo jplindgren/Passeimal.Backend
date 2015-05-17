@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Passeimal.Backend.API2.Filters;
 using Passeimal.Backend.Siren.Formatting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -27,11 +29,13 @@ namespace Passeimal.Backend.API2 {
             config.EnableSystemDiagnosticsTracing();
             //config.Formatters.Add(new SirenMediaTypeFormatter());
 
-            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+            //config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
-            var settings = config.Formatters.JsonFormatter.SerializerSettings;
-            settings.Formatting = Formatting.Indented;
-            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.MessageHandlers.Add(new CollectionMetadataHandler());
+            config.Formatters.RemoveAt(1);
+
+            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
         }

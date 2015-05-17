@@ -1,0 +1,20 @@
+﻿#nice knowledge sources
+https://developers.google.com/maps/documentation/javascript/markers
+
+https://developers.google.com/maps/articles/toomanymarkers
+
+http://bitoftech.net/2013/11/25/implement-resources-pagination-asp-net-web-api/
+
+http://www.strathweb.com/2012/06/extending-your-asp-net-web-api-responses-with-useful-metadata/
+
+http://www.strathweb.com/2015/03/strongly-typed-routing-asp-net-mvc-6-iapplicationmodelconvention/
+
+http://www.strathweb.com/2014/07/building-strongly-typed-route-provider-asp-net-web-api/
+
+#geolocation
+https://github.com/scottschluer/Geolocation
+
+##
+http://stackoverflow.com/questions/1356321/loading-markers-on-google-maps-dynamically-on-map-move-drag-pan
+http://stackoverflow.com/questions/28493846/search-when-i-move-the-map
+

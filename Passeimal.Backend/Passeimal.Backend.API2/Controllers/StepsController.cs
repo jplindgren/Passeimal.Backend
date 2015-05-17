@@ -68,6 +68,12 @@ namespace Passeimal.Backend.API2.Controllers{
             return Request.CreateResponse(HttpStatusCode.Created, step);
         }
 
+        // POST api/Step        
+        [System.Web.Http.HttpOptions]
+        public HttpResponseMessage Options() {            
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
         // DELETE api/Step/5
         public HttpResponseMessage Delete(Guid id) {
             Step step = _repository.Get(id);

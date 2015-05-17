@@ -12,6 +12,7 @@ namespace Passeimal.Backend.Dal{
 
         //sets
         public IDbSet<Step> Steps { get; set; }
+        public IDbSet<Place> Places { get; set; }
 
         public System.Data.Entity.IDbSet<T> Set<T>() where T : class {
             return base.Set<T>();
