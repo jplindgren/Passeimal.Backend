@@ -79,31 +79,39 @@ namespace Passeimal.Backend.API2.Controllers {
             return Request.CreateResponse(HttpStatusCode.Created, place);
         }
 
-        public HttpResponseMessage Put() {
-            var placeEntity = new Place() {
-                FormattedAddress = "Rua Marquês de São Vicente, 11 - Gávea, Rio de Janeiro - RJ, 22451-041, Brasil",
-                GooglePlaceId = "97e5d482b66e09b5f8d7dac31d4759cf534db47b",
-                Icon = "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-                Location = new Location(-22.975213, -43.22696500000001),
-                Name = "Bacalhau do Rei",
-                Vicinity = "Rua Marquês de São Vicente, 11 - Gávea, Rio de Janeiro"
-            };            
+        [HttpOptions]
+        public HttpResponseMessage Options() {
+            return Request.CreateResponse(HttpStatusCode.Created);
+        }
+
+        [ResponseType(typeof(Place))]
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody]PukeMessage puckMessage) {
+            var place = _dataContext.Set<Place>().Where(x => x.Id == puckMessage.PlaceId).FirstOrDefault();
+            var puck = new Puke((Severity)puckMessage.PukeVal, string.Empty);
+            place.Pukes.Add(puck);
 
             try {
-                _dataContext.Set<Place>().Add(placeEntity);
                 _dataContext.SaveChanges();
             } catch (DbUpdateException) {
-                if (PlaceExists(placeEntity.Id)) {
-                    return Request.CreateResponse(HttpStatusCode.Conflict);
-                } else {
-                    throw;
-                }
+                throw;
             }
-            return Request.CreateResponse(HttpStatusCode.Created);
+            return Request.CreateResponse(HttpStatusCode.Created, puck);
+        }
+
+        // DELETE api/place/5
+        public HttpResponseMessage Delete(int id) {
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         private bool PlaceExists(Guid guid) {
             return false;
         }
+
+        public class PukeMessage {
+            public Guid PlaceId { get; set; }
+            public int PukeVal { get; set; }
+        }
+
     }//class
 }

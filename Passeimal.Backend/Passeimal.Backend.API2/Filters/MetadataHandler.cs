@@ -17,7 +17,7 @@ namespace Passeimal.Backend.API2.Filters {
             return base.SendAsync(request, cancellationToken).ContinueWith(
                 task => {
                     if (!ResponseIsValid(task.Result))
-                        return null;
+                        return task.Result;
 
                     object responseObject;
                     task.Result.TryGetContentValue(out responseObject);
